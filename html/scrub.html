@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/d3.v5.min.js"></script>
+<script src="/js/lodash.min.js"></script>
+<script src="/js/moment.min.js"></script>
+<style type="text/css">
+body {
+	font-family: courier;
+	background: rgba(177, 177, 177, 0.6);
+	margin-left: 20px;
+	image-rendering: crisp-edges;
+}
+h1 {
+}
+#description-container {
+	text-align: left;
+}
+#description {
+	max-width: 600px;
+	font-size: 0.8em;
+	font-family: courier;
+}
+#controls {
+	padding-top: 10px;
+	margin: 0px;
+	margin-bottom: -10px;
+	background: rgb(179, 179, 179);
+    border-radius: 10px 10px 0px 0px;
+}
+#autoplay-container {
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+#auto-play {
+	display: inline;
+	cursor: pointer;
+	border-radius: 5px;
+	border: 1px solid black;
+	padding: 10px;
+	width: 100px;
+	text-align: center;
+}
+#hour-selector-display {
+	margin: 10px;
+	color: white;
+    position: relative;
+    top: 20px;
+}
+#hour-selector {
+	margin: 10px;
+	width: calc(100% - 20px);
+}
+.toggled {
+	background: rgba(0,0,0,0.4);
+	color: white;
+	font-weight: bold;
+}
+#img-container {
+	margin-bottom: -5px;
+}
+#legend-container {
+	width: 100vw;
+	margin-top: 0px;
+}
+#main-image {
+	image-rendering: pixelated;
+}
+</style>
+</head>
+<body>
+	<h1>Los Angeles Carbon Emissions (tC) - 2011</h1>
+	<div id="description-container">
+		<div id="description">
+			<p>
+				This shows the hourly carbon emissions of 1km<sup>2</sup> regions of Los Angeles.
+				The data was collected by the Hestia Project, which has a website <a href="http://hestia.rc.nau.edu/" target="_blank">here</a>.
+			<p></p>
+				The slider allows you to select which hour you are viewing.
+				Clicking the auto play button makes the computer scrub through the hours of the dataset.
+				The key at the bottom of the image shows how the colors correspond to tons of carbon emitted.
+			</p>
+		</div>
+	</div>
+	<div id="controls">
+		<div id="autoplay-container">
+			<div id="auto-play">auto play</div>
+		</div>
+		<input name="hour-selector" id="hour-selector" type="range" min="0" max="168" step="1"></input>
+		<label id="hour-selector-display"></label>
+	</div>
+	<div id="img-container">
+		<img id="main-image" src="/output/all_hours/0000.png"></img>
+	</div>
+	<div id="legend-container">
+		<canvas id="legend" height=50></canvas>
+	</div>
+	<script type="text/javascript" src="/js/scrub.js"></script>
+	<!--
+	<script type="text/javascript" src="/js/live.js"></script>
+	-->
+</body>
+</html>
+
