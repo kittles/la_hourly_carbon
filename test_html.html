@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exported ArcGIS Map Widget</title>
+</head>
+<body>
+
+
+<!-- Load require.js. Delete this if your page already loads require.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.14.0/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+<script type="application/vnd.jupyter.widget-state+json">
+{
+  "version_minor": 0,
+  "version_major": 2,
+  "state": {
+    "823f9212bbf34962a6bdb488022ece97": {
+      "model_module": "arcgis-map-ipywidget",
+      "model_name": "ArcGISMapIPyWidgetModel",
+      "state": {
+        "_center_long_lat": [],
+        "_draw_these_notype_layers_on_widget_load": [],
+        "_webscene": {},
+        "_readonly_webmap_from_js": {},
+        "layout": "IPY_MODEL_b1ff8025f0274f329df900c893d1cd7b",
+        "_add_this_graphic": {},
+        "_webmap": {},
+        "_add_this_notype_layer": {},
+        "_basemap": "default",
+        "_readonly_extent": {},
+        "_center": {},
+        "_draw_these_graphics_on_widget_load": [],
+        "_uuid": "65988b75-7e2f-41d8-9af8-a421b81f685c",
+        "_portal_sharing_rest_url": "https://www.arcgis.com/sharing/rest/",
+        "_layers_to_remove": [],
+        "_username": "None",
+        "_readonly_center": {},
+        "_gallery_basemaps": {
+          "default": {
+            "baseMapLayers": [
+              {
+                "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+                "layerType": "ArcGISTiledMapServiceLayer",
+                "resourceInfo": {
+                  "maxImageWidth": 4096,
+                  "mapName": "Layers",
+                  "supportedExtensions": "KmlServer",
+                  "initialExtent": {
+                    "xmax": 28848255.049479112,
+                    "ymin": -2077452.082122866,
+                    "ymax": 16430757.376790084,
+                    "xmin": -28848255.049479112,
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    }
+                  },
+                  "fullExtent": {
+                    "xmax": 20037507.067161843,
+                    "ymin": -19971868.880408604,
+                    "ymax": 19971868.88040863,
+                    "xmin": -20037507.067161843,
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    }
+                  },
+                  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+                  "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                  },
+                  "layers": [
+                    {
+                      "parentLayerId": -1,
+                      "subLayerIds": null,
+                      "defaultVisibility": false,
+                      "name": "Citations",
+                      "maxScale": 0,
+                      "minScale": 0,
+                      "id": 0
+                    }
+                  ],
+                  "exportTilesAllowed": false,
+                  "maxRecordCount": 100,
+                  "tables": [],
+                  "tileInfo": {
+                    "compressionQuality": 90,
+                    "cols": 256,
+                    "lods": [
+                      {
+                        "scale": 591657527.591555,
+                        "resolution": 156543.03392800014,
+                        "level": 0
+                      },
+                      {
+                        "scale": 295828763.795777,
+                        "resolution": 78271.51696399994,
+                        "level": 1
+                      },
+                      {
+                        "scale": 147914381.897889,
+                        "resolution": 39135.75848200009,
+                        "level": 2
+                      },
+                      {
+                        "scale": 73957190.948944,
+                        "resolution": 19567.87924099992,
+                        "level": 3
+                      },
+                      {
+                        "scale": 36978595.474472,
+                        "resolution": 9783.93962049996,
+                        "level": 4
+                      },
+                      {
+                        "scale": 18489297.737236,
+                        "resolution": 4891.96981024998,
+                        "level": 5
+                      },
+                      {
+                        "scale": 9244648.868618,
+                        "resolution": 2445.98490512499,
+                        "level": 6
+                      },
+                      {
+                        "scale": 4622324.434309,
+                        "resolution": 1222.992452562495,
+                        "level": 7
+                      },
+                      {
+                        "scale": 2311162.217155,
+                        "resolution": 611.4962262813797,
+                        "level": 8
+                      },
+                      {
+                        "scale": 1155581.108577,
+                        "resolution": 305.74811314055756,
+                        "level": 9
+                      },
+                      {
+                        "scale": 577790.554289,
+                        "resolution": 152.87405657041106,
+                        "level": 10
+                      },
+                      {
+                        "scale": 288895.277144,
+                        "resolution": 76.43702828507324,
+                        "level": 11
+                      },
+                      {
+                        "scale": 144447.638572,
+                        "resolution": 38.21851414253662,
+                        "level": 12
+                      },
+                      {
+                        "scale": 72223.819286,
+                        "resolution": 19.10925707126831,
+                        "level": 13
+                      },
+                      {
+                        "scale": 36111.909643,
+                        "resolution": 9.554628535634155,
+                        "level": 14
+                      },
+                      {
+                        "scale": 18055.954822,
+                        "resolution": 4.77731426794937,
+                        "level": 15
+                      },
+                      {
+                        "scale": 9027.977411,
+                        "resolution": 2.388657133974685,
+                        "level": 16
+                      },
+                      {
+                        "scale": 4513.988705,
+                        "resolution": 1.1943285668550503,
+                        "level": 17
+                      },
+                      {
+                        "scale": 2256.994353,
+                        "resolution": 0.5971642835598172,
+                        "level": 18
+                      },
+                      {
+                        "scale": 1128.497176,
+                        "resolution": 0.29858214164761665,
+                        "level": 19
+                      },
+                      {
+                        "scale": 564.248588,
+                        "resolution": 0.14929107082380833,
+                        "level": 20
+                      },
+                      {
+                        "scale": 282.124294,
+                        "resolution": 0.07464553541190416,
+                        "level": 21
+                      },
+                      {
+                        "scale": 141.062147,
+                        "resolution": 0.03732276770595208,
+                        "level": 22
+                      },
+                      {
+                        "scale": 70.5310735,
+                        "resolution": 0.01866138385297604,
+                        "level": 23
+                      }
+                    ],
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    },
+                    "dpi": 96,
+                    "format": "JPEG",
+                    "rows": 256,
+                    "origin": {
+                      "x": -20037508.342787,
+                      "y": 20037508.342787
+                    }
+                  },
+                  "maxScale": 70.5310735,
+                  "capabilities": "Map,Tilemap,Query,Data",
+                  "currentVersion": 10.3,
+                  "supportedQueryFormats": "JSON, AMF",
+                  "minScale": 591657527.591555,
+                  "singleFusedMapCache": true,
+                  "supportsDynamicLayers": false,
+                  "units": "esriMeters",
+                  "maxImageHeight": 4096
+                }
+              }
+            ],
+            "title": "Topographic"
+          }
+        },
+        "_auth_mode": "anonymous",
+        "_trigger_screenshot_with_args": {},
+        "_dom_classes": [],
+        "_extent": {},
+        "_trigger_new_jlab_window_with_args": {},
+        "_portal_url": "https://www.arcgis.com"
+      },
+      "model_module_version": "1.6.1"
+    },
+    "b1ff8025f0274f329df900c893d1cd7b": {
+      "model_module": "@jupyter-widgets/base",
+      "model_name": "LayoutModel",
+      "state": {
+        "width": "100%",
+        "height": "400px"
+      },
+      "model_module_version": "1.1.0"
+    },
+    "5995c1e7976e44c890ebccf2d6a08ef9": {
+      "model_module": "arcgis-map-ipywidget",
+      "model_name": "ArcGISMapIPyWidgetModel",
+      "state": {
+        "_center_long_lat": [],
+        "_draw_these_notype_layers_on_widget_load": [],
+        "_webscene": {},
+        "_readonly_webmap_from_js": {},
+        "layout": "IPY_MODEL_2042b43c04444fe2919460c1915d13ce",
+        "_add_this_graphic": {},
+        "_webmap": {},
+        "_add_this_notype_layer": {},
+        "_basemap": "default",
+        "_readonly_extent": {},
+        "_center": {},
+        "_draw_these_graphics_on_widget_load": [],
+        "_uuid": "eb86dfc4-10bc-462f-ad92-ad93cb8c53db",
+        "_portal_sharing_rest_url": "https://www.arcgis.com/sharing/rest/",
+        "_layers_to_remove": [],
+        "_username": "None",
+        "_readonly_center": {},
+        "_gallery_basemaps": {
+          "default": {
+            "baseMapLayers": [
+              {
+                "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+                "layerType": "ArcGISTiledMapServiceLayer",
+                "resourceInfo": {
+                  "maxImageWidth": 4096,
+                  "mapName": "Layers",
+                  "supportedExtensions": "KmlServer",
+                  "initialExtent": {
+                    "xmax": 28848255.049479112,
+                    "ymin": -2077452.082122866,
+                    "ymax": 16430757.376790084,
+                    "xmin": -28848255.049479112,
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    }
+                  },
+                  "fullExtent": {
+                    "xmax": 20037507.067161843,
+                    "ymin": -19971868.880408604,
+                    "ymax": 19971868.88040863,
+                    "xmin": -20037507.067161843,
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    }
+                  },
+                  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+                  "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                  },
+                  "layers": [
+                    {
+                      "parentLayerId": -1,
+                      "subLayerIds": null,
+                      "defaultVisibility": false,
+                      "name": "Citations",
+                      "maxScale": 0,
+                      "minScale": 0,
+                      "id": 0
+                    }
+                  ],
+                  "exportTilesAllowed": false,
+                  "maxRecordCount": 100,
+                  "tables": [],
+                  "tileInfo": {
+                    "compressionQuality": 90,
+                    "cols": 256,
+                    "lods": [
+                      {
+                        "scale": 591657527.591555,
+                        "resolution": 156543.03392800014,
+                        "level": 0
+                      },
+                      {
+                        "scale": 295828763.795777,
+                        "resolution": 78271.51696399994,
+                        "level": 1
+                      },
+                      {
+                        "scale": 147914381.897889,
+                        "resolution": 39135.75848200009,
+                        "level": 2
+                      },
+                      {
+                        "scale": 73957190.948944,
+                        "resolution": 19567.87924099992,
+                        "level": 3
+                      },
+                      {
+                        "scale": 36978595.474472,
+                        "resolution": 9783.93962049996,
+                        "level": 4
+                      },
+                      {
+                        "scale": 18489297.737236,
+                        "resolution": 4891.96981024998,
+                        "level": 5
+                      },
+                      {
+                        "scale": 9244648.868618,
+                        "resolution": 2445.98490512499,
+                        "level": 6
+                      },
+                      {
+                        "scale": 4622324.434309,
+                        "resolution": 1222.992452562495,
+                        "level": 7
+                      },
+                      {
+                        "scale": 2311162.217155,
+                        "resolution": 611.4962262813797,
+                        "level": 8
+                      },
+                      {
+                        "scale": 1155581.108577,
+                        "resolution": 305.74811314055756,
+                        "level": 9
+                      },
+                      {
+                        "scale": 577790.554289,
+                        "resolution": 152.87405657041106,
+                        "level": 10
+                      },
+                      {
+                        "scale": 288895.277144,
+                        "resolution": 76.43702828507324,
+                        "level": 11
+                      },
+                      {
+                        "scale": 144447.638572,
+                        "resolution": 38.21851414253662,
+                        "level": 12
+                      },
+                      {
+                        "scale": 72223.819286,
+                        "resolution": 19.10925707126831,
+                        "level": 13
+                      },
+                      {
+                        "scale": 36111.909643,
+                        "resolution": 9.554628535634155,
+                        "level": 14
+                      },
+                      {
+                        "scale": 18055.954822,
+                        "resolution": 4.77731426794937,
+                        "level": 15
+                      },
+                      {
+                        "scale": 9027.977411,
+                        "resolution": 2.388657133974685,
+                        "level": 16
+                      },
+                      {
+                        "scale": 4513.988705,
+                        "resolution": 1.1943285668550503,
+                        "level": 17
+                      },
+                      {
+                        "scale": 2256.994353,
+                        "resolution": 0.5971642835598172,
+                        "level": 18
+                      },
+                      {
+                        "scale": 1128.497176,
+                        "resolution": 0.29858214164761665,
+                        "level": 19
+                      },
+                      {
+                        "scale": 564.248588,
+                        "resolution": 0.14929107082380833,
+                        "level": 20
+                      },
+                      {
+                        "scale": 282.124294,
+                        "resolution": 0.07464553541190416,
+                        "level": 21
+                      },
+                      {
+                        "scale": 141.062147,
+                        "resolution": 0.03732276770595208,
+                        "level": 22
+                      },
+                      {
+                        "scale": 70.5310735,
+                        "resolution": 0.01866138385297604,
+                        "level": 23
+                      }
+                    ],
+                    "spatialReference": {
+                      "wkid": 102100,
+                      "latestWkid": 3857
+                    },
+                    "dpi": 96,
+                    "format": "JPEG",
+                    "rows": 256,
+                    "origin": {
+                      "x": -20037508.342787,
+                      "y": 20037508.342787
+                    }
+                  },
+                  "maxScale": 70.5310735,
+                  "capabilities": "Map,Tilemap,Query,Data",
+                  "currentVersion": 10.3,
+                  "supportedQueryFormats": "JSON, AMF",
+                  "minScale": 591657527.591555,
+                  "singleFusedMapCache": true,
+                  "supportsDynamicLayers": false,
+                  "units": "esriMeters",
+                  "maxImageHeight": 4096
+                }
+              }
+            ],
+            "title": "Topographic"
+          }
+        },
+        "_auth_mode": "anonymous",
+        "_trigger_screenshot_with_args": {},
+        "_dom_classes": [],
+        "_extent": {},
+        "_trigger_new_jlab_window_with_args": {},
+        "_portal_url": "https://www.arcgis.com"
+      },
+      "model_module_version": "1.6.1"
+    },
+    "2042b43c04444fe2919460c1915d13ce": {
+      "model_module": "@jupyter-widgets/base",
+      "model_name": "LayoutModel",
+      "state": {
+        "width": "100%",
+        "height": "100%"
+      },
+      "model_module_version": "1.1.0"
+    }
+  }
+}
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5995c1e7976e44c890ebccf2d6a08ef9", "version_major": 2, "version_minor": 0}
+</script>
+
+</body>
+</html>

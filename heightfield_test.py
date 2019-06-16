@@ -184,51 +184,23 @@ def generate_camera (config):
 def generate_scene_objects (config):
     objects = [
         Background('color', [1, 1, 1]),
-        Plane(
-            [0,0,1], 0,
+        HeightField(
+            'jpeg', '"/home/patrick/projects/kevin_gurney/la_hourly/heightfield.jpg"',
+            'smooth',
+            'scale', [400, 100, 400],
+            'translate', [-500, -500, -200],
+            'rotate', [90,0,0],
             Texture(
                 Pigment(
-                    ImageMap(
-                        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/la-streets-sized.png"', 'once',
-                    ),
-                    'scale', [scale_x, scale_y, 1],
-                    'translate', [-trans_x, -trans_y, 0],
-                    #'rotate', [0,180,0],
-                    'rotate', [180,0,0],
-                    #'rotate', [0,0,180],
+                    #ImageMap(
+                    #    'jpeg', '"/home/patrick/projects/kevin_gurney/la_hourly/heightfield.jpg"',
+                    #),
+                    'color', [1,0,0],
                 ),
-                #Pigment(
-                #    ImageMap(
-                #        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/combo.png"', 'once',
-                #    ),
-                #    'scale', [scale_x * 2.5, scale_y * 2.5, 1],
-                #    'translate', [-trans_x * 2.5, -trans_y * 2.5, 0],
-                #    #'rotate', [0,180,0],
-                #    'rotate', [180,0,0],
-                #    #'rotate', [0,0,180],
-                #),
-                #Pigment('color', [1,0,0]),
-                Finish('emission', 0.3),
+                'scale', [400, 100, 400],
+                'translate', [-500, -500, -200],
+                'rotate', [90,0,0],
             ),
-            'no_shadow',
-        ),
-        Plane(
-            [0,0,1], -0.1,
-            Texture(
-                Pigment(
-                    ImageMap(
-                        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/combo.png"', 'once',
-                    ),
-                    'scale', [2000, 3000, 1],
-                    'translate', [-1000, -2000, 0],
-                    #'rotate', [0,180,0],
-                    'rotate', [180,0,0],
-                    #'rotate', [0,0,180],
-                ),
-                #Pigment('color', [1,0,0]),
-                Finish('emission', 0.3),
-            ),
-            'no_shadow',
         ),
         LightSource(
             [x_dim / 2, y_dim / 2, 1000],
@@ -308,7 +280,8 @@ def render_scene (config, verbose=False):
 
     scene_objects = generate_scene_objects(config)
     camera = generate_camera(config)
-    bars = generate_bars(config)
+    #bars = generate_bars(config)
+    bars = []
 
     scene = Scene(camera, objects=scene_objects + bars)
     scene.render(

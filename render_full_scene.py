@@ -17,10 +17,6 @@ from vapory import *
 import pprint
 import random
 
-# load all data
-nc_fp = '/home/patrick/projects/kevin_gurney/la_hourly/data/LAbasin.total.hourly.2011.v2.5.nc'
-nc = netCDF4.Dataset(nc_fp)
-
 def data_by_hour (hour):
     threshold = 5000 
     data = nc.variables['Carbon Emission'][hour].filled(fill_value=0)
@@ -47,86 +43,80 @@ def interpolate_data (d1, d2, w1=1, w2=1):
     arrs = arrs1 + arrs2
     return np.mean(arrs, axis=0)
 
-
-# get some basic dimensions
-data = data_by_hour(0)
-x_dim = data.shape[0]
-y_dim = data.shape[1]
-z_dim = 100
-
-# for aligning map with data
-scale_x = x_dim
-scale_y = y_dim
-trans_x = 0
-trans_y = y_dim
-
-# prepare scene
+# colorscheme
 colors = cc.fire[:]
 colors = [np.array([int(h.lstrip('#')[i:i+2], 16) for i in (0, 2, 4)]) for h in colors]
 colors[0] = np.array([0,0,0])
 
-# different for matplotlib colormaps
-cm = plt.get_cmap('viridis')
-colors = [np.array([0,0,0,0])] + [np.array(cm(i)) * 255 for i in range(1,256)]
-#print(colors)
-
-# simply more opaque black as higher z
-#colors = [np.array([0,0,0]) for i in range(0,256)]
-#print(colors)
-
-
-# for rendering and camera placement
-
+# all the rendering details
 config = dict(
+    colors = colors,
+    nc_fp = '/home/patrick/projects/kevin_gurney/la_hourly/data/LAbasin.total.hourly.2011.v2.5.nc',
+    basemap_fp = '/home/patrick/projects/kevin_gurney/la_hourly/basemaps/composite-crop.jpg',
+    basemap_min_pixel = np.array([2833, 5904 - 3885]), # these are from top left hence the subtraction
+    basemap_max_pixel = np.array([5616, 5904 - 2015]),
+    basemap_scale = 0.2,
     bar_threshold = 1,
-    base_resolution_x = 1920,
-    base_resolution_y = 1080,
+    render_resolution_x = 1920,
+    render_resolution_y = 1080,
     resolution_multiple = 1,
-    radius = y_dim + (y_dim / 2),
-    origin = [x_dim / 2, y_dim / 2],
     z_base = 500,
     ortho_angle = 60,
     step_counter = 0,         # everything about the frame should be determined by this
     nth_step = 1,             # for quick and dirty renders
     angle_start = 45,         # where the camera starts the animation
     angle_sweep = 90,         # total sweep during the entire animation
-    render_times = [],
     empty_steps_before = 60,  # show empty map to get bearings
     empty_steps_after = 60,
     total_hours = 24,
     still_steps = 30,         # steps to wait between hours to show still bars
     interpolation_steps = 30, # steps to fade between two hours
     radiosity = False,
-    #radiosity = Radiosity(
-    #    'brightness', 1.5,
-    #    'count', 100,
-    #    'error_bound', 0.15,
-    #    'gray_threshold', 0.0,
-    #    'low_error_factor', 0.2,
-    #    'minimum_reuse', 0.015,
-    #    'nearest_count', 5,
-    #    'recursion_limit', 2,
-    #    'adc_bailout', 0.01,
-    #    'max_sample', 0.5,
-    #    'media off',
-    #    'normal off',
-    #    'always_sample', 1,
-    #    'pretrace_start', 0.08,
-    #    'pretrace_end', 0.01
-    #),
     antialiasing = 0.0001,
     output_dir = 'output/test/',
     fps = 60,                 # for ffmpeg movie rendering
 )
 
-# compute some handy numbers
-config['ratio'] = config['base_resolution_x'] / config['base_resolution_y']
-config['total_steps'] = config['empty_steps_before'] + config['empty_steps_after']
-config['total_steps'] += (1 + config['total_hours']) * (config['still_steps'] + config['interpolation_steps'])
-config['single_hour_steps'] = config['still_steps'] + config['interpolation_steps']
-config['total_hour_steps'] = config['single_hour_steps'] * (1 + config['total_hours'])
-config['angles'] = np.linspace(config['angle_start'], config['angle_start'] + config['angle_sweep'], config['total_steps'] + 1) 
+
+# dataset dimension info
+nc = netCDF4.Dataset(config['nc_fp'])
+data = data_by_hour(0)
+x_dim = data.shape[0]
+y_dim = data.shape[1]
+z_dim = 100
+
+# some basics about the basemap image
+basemap_img = Image.open(config['basemap_fp'])
+basemap_width = basemap_img.width
+basemap_height = basemap_img.height
+
+# use the basemap info to generate the values for locating data
+data_x_offset = config['basemap_scale'] * config['basemap_min_pixel'][0]
+data_y_offset = config['basemap_scale'] * config['basemap_min_pixel'][1]
+data_x_unit = config['basemap_scale'] * (config['basemap_max_pixel'][0] - config['basemap_min_pixel'][0]) / x_dim
+data_y_unit = config['basemap_scale'] * (config['basemap_max_pixel'][1] - config['basemap_min_pixel'][1]) / y_dim
+
+def to_basemap_coords (vec):
+    return np.array([
+        data_x_offset + (data_x_unit * vec[0]),
+        data_y_offset + (data_y_unit * vec[1]),
+        vec[2],
+    ])
+
+# compute some handy numbers for knowing where we are in the animation
+total_anim_steps = config['empty_steps_before'] + config['empty_steps_after']
+total_anim_steps += (1 + config['total_hours']) * (config['still_steps'] + config['interpolation_steps'])
+single_hour_steps = config['still_steps'] + config['interpolation_steps']
+total_hour_steps = single_hour_steps * (1 + config['total_hours'])
+
+# camera placement info
+data_center = to_basemap_coords([x_dim / 2, y_dim / 2, 0])
+radius = (y_dim * 1.5) * data_y_unit # keep the camera a constant distance from the center as it rotates
+angles = np.linspace(config['angle_start'], config['angle_start'] + config['angle_sweep'], total_anim_steps + 1) 
+
+# for tracking progress and rendering speed
 config['start_time'] = dt.datetime.now()
+render_times = []
 
 # prepare directory for renders
 try:
@@ -140,19 +130,18 @@ except:
         shutil.rmtree(config['output_dir'])
         os.mkdir(config['output_dir'])
 
-
 def next_frame (config):
     # advance the step and counter and log some data about how things are going
     config['step_counter'] += config['nth_step']
-    if config['step_counter'] > config['total_steps']:
+    if config['step_counter'] > total_anim_steps:
         return False
-    progress =  100 * config['step_counter'] / config['total_steps']
+    progress =  100 * config['step_counter'] / total_anim_steps 
     elapsed = dt.datetime.now() - config['start_time']
     estimate = 100 * (elapsed / progress)
     estimate -= elapsed
     sys.stdout.write('\r'+'step counter: {:06} of {:06} -- {:0.2f} % -- elapsed: {} -- estimated_left: {}'.format(
         config['step_counter'], 
-        config['total_steps'], 
+        total_anim_steps,
         progress, 
         elapsed,
         estimate
@@ -163,10 +152,10 @@ def next_frame (config):
 
 def generate_camera (config):
     step = config['step_counter']
-    angle = config['angles'][step]
+    angle = angles[step]
     angle_rad = math.radians(angle)
-    x = config['origin'][0] + math.cos(angle_rad)*config['radius'];
-    y = config['origin'][1] + math.sin(angle_rad)*config['radius'];
+    x = data_center[0] + math.cos(angle_rad)*radius;
+    y = data_center[1] + math.sin(angle_rad)*radius;
     # should rise until 90, then fall correspondingly
     y -= 200 * (1 - (abs(90 - angle)/ 90))
     camera = Camera(
@@ -175,7 +164,7 @@ def generate_camera (config):
         'sky', [0,0,1],
         #'direction', [0, 0, 1],
         #'right', 
-        'look_at',  [x_dim/2, y_dim/2, 20]
+        'look_at', data_center, 
     )
     #config['angle'] += config['angle_step']
     return camera
@@ -189,43 +178,12 @@ def generate_scene_objects (config):
             Texture(
                 Pigment(
                     ImageMap(
-                        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/la-streets-sized.png"', 'once',
+                        'jpeg', '"{}"'.format(config['basemap_fp']), 'once',
                     ),
-                    'scale', [scale_x, scale_y, 1],
-                    'translate', [-trans_x, -trans_y, 0],
-                    #'rotate', [0,180,0],
-                    'rotate', [180,0,0],
-                    #'rotate', [0,0,180],
+                    'scale', [basemap_width * config['basemap_scale'], basemap_height * config['basemap_scale'], 1],
+                    'translate', [-basemap_width * config['basemap_scale'], -basemap_height * config['basemap_scale'], 0],
+                    'rotate', [180,180,0],
                 ),
-                #Pigment(
-                #    ImageMap(
-                #        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/combo.png"', 'once',
-                #    ),
-                #    'scale', [scale_x * 2.5, scale_y * 2.5, 1],
-                #    'translate', [-trans_x * 2.5, -trans_y * 2.5, 0],
-                #    #'rotate', [0,180,0],
-                #    'rotate', [180,0,0],
-                #    #'rotate', [0,0,180],
-                #),
-                #Pigment('color', [1,0,0]),
-                Finish('emission', 0.3),
-            ),
-            'no_shadow',
-        ),
-        Plane(
-            [0,0,1], -0.1,
-            Texture(
-                Pigment(
-                    ImageMap(
-                        'png', '"/home/patrick/projects/kevin_gurney/la_hourly/basemaps/combo.png"', 'once',
-                    ),
-                    'scale', [2000, 3000, 1],
-                    'translate', [-1000, -2000, 0],
-                    #'rotate', [0,180,0],
-                    'rotate', [180,0,0],
-                    #'rotate', [0,0,180],
-                ),
-                #Pigment('color', [1,0,0]),
                 Finish('emission', 0.3),
             ),
             'no_shadow',
@@ -236,6 +194,45 @@ def generate_scene_objects (config):
         ),
     ]
     return objects
+
+def generate_axes (config):
+    return [
+        # x axis
+        Box(
+            data_center - 5,
+            (data_center + 5) + [1000, 0, 0],
+            Texture(
+                Pigment('color', [0,1,0]),
+                Finish('emission', 0.8),
+            )
+        ),
+        # y axis
+        Box(
+            data_center - 5,
+            (data_center + 5) + [0, 1000, 0],
+            Texture(
+                Pigment('color', [0,0,1]),
+                Finish('emission', 0.8),
+            )
+        ),
+        # z axis
+        Box(
+            data_center - 5,
+            (data_center + 5) + [0, 0, 1000],
+            Texture(
+                Pigment('color', [1,0,0]),
+                Finish('emission', 0.8),
+            )
+        ),
+        Box(
+            data_center - 5,
+            data_center + 5,
+            Texture(
+                Pigment('color', [1,1,1]),
+                Finish('emission', 0.8),
+            )
+        ),
+    ]
 
 
 def generate_bars (config):
@@ -249,10 +246,11 @@ def generate_bars (config):
     def make_bar (x,y,z):
         color = colors[int(255 * z / z_dim)]
         return Box(
-            [x, y, 0],
-            [x + 1, y + 1, z],
+            to_basemap_coords([x, y, 0]),
+            to_basemap_coords([x + 1, y + 1, z]),
             Texture( 
-                Pigment('color', color / 255, 'transmit', transmition_value(z)),
+                Pigment('color', color / 255),
+                #Pigment('color', color / 255, 'transmit', transmition_value(z)),
                 Finish('emission', 0.8),
                 #Finish('ambient', 0.7),
             ),
@@ -264,10 +262,10 @@ def generate_bars (config):
     if step < config['empty_steps_before']:
         # empty map
         pass
-    elif step < (config['empty_steps_before'] + config['total_hour_steps']):
+    elif step < (config['empty_steps_before'] + total_hour_steps):
         # during one of the hours
         total_hour_step = step - config['empty_steps_before']
-        hour = total_hour_step // config['single_hour_steps']
+        hour = total_hour_step // single_hour_steps
         hour_step = total_hour_step % (config['interpolation_steps'] + config['still_steps'])
         # first and last hour need zero data on either side
         if hour == 0:
@@ -300,7 +298,7 @@ def generate_bars (config):
 
 
 def render_time_average (config):
-    return sum(config['render_times'], dt.timedelta(0)) / len(config['render_times'])
+    return sum(render_times, dt.timedelta(0)) / len(render_times)
 
 
 def render_scene (config, verbose=False):
@@ -309,15 +307,16 @@ def render_scene (config, verbose=False):
     scene_objects = generate_scene_objects(config)
     camera = generate_camera(config)
     bars = generate_bars(config)
+    axes = generate_axes(config)
 
-    scene = Scene(camera, objects=scene_objects + bars)
+    scene = Scene(camera, objects=scene_objects + bars + axes)
     scene.render(
         config['output_dir']+'{:06}.png'.format(config['step_counter']),
-        width=config['base_resolution_x'] * config['resolution_multiple'],
-        height=config['base_resolution_y'] * config['resolution_multiple'],
+        width=config['render_resolution_x'] * config['resolution_multiple'],
+        height=config['render_resolution_y'] * config['resolution_multiple'],
         antialiasing=config['antialiasing'],
     )
-    config['render_times'].append(dt.datetime.now() - start)
+    render_times.append(dt.datetime.now() - start)
     if verbose:
         print('render took {} seconds. average render time: {}'.format(
             dt.datetime.now() - start, 
